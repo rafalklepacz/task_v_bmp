@@ -1,37 +1,35 @@
 #pragma once
 
 #include "pch.h"
-#include <iostream>
+#include <fstream>
 
 struct ColorsRGB {
-    char R;
-    char G;
-    char B;
-};
+    char R, G, B;
+} __attribute__((__packed__));
 
 struct PictureHeader {
-    int biSize;
+    unsigned int biSize;
     int biWidth;
     int biHeight;
-    short biPlanes;
-    short biBitCount;
-    int biCompression;
-    int biSizeImage;
+    unsigned short biPlanes;
+    unsigned short biBitCount;
+    unsigned int biCompression;
+    unsigned int biSizeImage;
     int biXPelsPerMeter;
     int biYPelsPerMeter;
-    int biClrUsed;
-    int biClrImportant;
+    unsigned int biClrUsed;
+    unsigned int biClrImportant;
     ColorsRGB rgb;
-};
+} __attribute__((__packed__));
 
 struct FileHeader {
-    short bfType;
-    int bfSize;
-    short bfReserved1;
-    short bfReserved2;
-    int bfOffBits;
-    PictureHeader picture;
-};
+    unsigned short type;
+    unsigned int size;
+    unsigned short reserved1;
+    unsigned short reserved2;
+    unsigned int offset;
+    PictureHeader Picture;
+} __attribute__((__packed__));
 
 
-FileHeader readBmpFile(std::string filePath);
+FileHeader readBmpFile(std::ifstream &bmpFile);

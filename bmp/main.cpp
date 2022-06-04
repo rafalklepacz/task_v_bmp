@@ -1,82 +1,42 @@
 ﻿#include "pch.h"
 #include "bmpReader.h"
 
+#include <iostream>
 
-int main(int arc, char* argv[]) {
+int main(int arc, char* argv[])
+{
+    std::string filePath(argv[1]);
+    std::ifstream bmpFile(filePath, std::ios::binary);
 
-    FILE* f = fopen(argv[1], "rb");
-
-    if (f == nullptr)
+    if (!bmpFile)
     {
-        printf("\n\n Can't open the file");
+        std::cerr << "The specified file cannot be opened: " << filePath << std::endl;
         return -1;
     }
-    else
-    {
-        printf("\n\n File f opened!");
-    }
 
-    printf("\n INFORMACJE O BITMAPIE\n\n");
+    std::cout << "File '" << filePath << "' opened!" << std::string(2, '\n');
 
-    auto fileHeader = readBmpFile(std::string(argv[1]));
+    FileHeader bmpFileInfo = readBmpFile(bmpFile);
 
-    // fread(&File.bfType, sizeof(File.bfType), 1, f);
-    // printf(" Typ: %x", File.bfType);
-    printf(" Typ: %x", fileHeader.bfType);
+    std::cout << "INFORMACJE O BITMAPIE!" << std::endl;
+    std::cout << "Typ: " << std::hex << bmpFileInfo.type << std::endl;
+    std::cout << "Rozmiar pliku: " << std::dec << bmpFileInfo.size << " bajtow" << std::endl;
+    std::cout << "Zarezerwowane1: " << std::dec << bmpFileInfo.reserved1 << std::endl;
+    std::cout << "Zarezerwowane2: " << std::dec << bmpFileInfo.reserved2 << std::endl;
+    std::cout << "Pozycja danych obrazkowych: " << std::dec << bmpFileInfo.offset << std::endl << std::endl;
+    std::cout << "Wielkosc naglowka informacyjnego: " << std::dec << bmpFileInfo.Picture.biSize << std::endl;
+    std::cout << "Szerokosc: " << std::dec << bmpFileInfo.Picture.biWidth << " pikseli" << std::endl;
+    std::cout << "Wysokosc: " << std::dec << bmpFileInfo.Picture.biHeight << " pikseli" << std::endl;
+    std::cout << "Liczba platow: " << std::dec << bmpFileInfo.Picture.biPlanes << std::endl;
+    std::cout << "Liczba bitow na piksel: " << std::dec << bmpFileInfo.Picture.biBitCount << " (1, 4, 8, or 24)" << std::endl;
+    std::cout << "Kompresja: " << std::dec << bmpFileInfo.Picture.biCompression << " (0=none, 1=RLE-8, 2=RLE-4)" << std::endl;
+    std::cout << "Rozmiar samego rysunku: " << std::dec << bmpFileInfo.Picture.biSizeImage << std::endl;
+    std::cout << "Rozdzielczosc pozioma: " << std::dec << bmpFileInfo.Picture.biXPelsPerMeter << std::endl;
+    std::cout << "Rozdzielczosc pionowa: " << std::dec << bmpFileInfo.Picture.biYPelsPerMeter << std::endl;
+    std::cout << "Liczba kolorow w palecie: " << std::dec << bmpFileInfo.Picture.biClrUsed << std::endl;
+    std::cout << "Wazne kolory w palecie: " << std::dec << bmpFileInfo.Picture.biClrImportant << std::endl;
 
-    // fread(&File.bfSize, sizeof(File.bfSize), 1, f);
-    // printf("\n Rozmiar pliku: %d bajtow", File.bfSize);
-    printf("\n Rozmiar pliku: %d bajtow", fileHeader.bfSize);
-
-    // fread(&File.bfReserved1, sizeof(File.bfReserved1), 1, f);
-    // printf("\n Zarezerwowane1: %d", File.bfReserved1);
-    printf("\n Zarezerwowane1: %d", fileHeader.bfReserved1);
-
-    // fread(&File.bfReserved2, sizeof(File.bfReserved2), 1, f);
-    // printf("\n Zarezerwowane2: %d", File.bfReserved2);
-    printf("\n Zarezerwowane2: %d", fileHeader.bfReserved2);
-
-    // fread(&File.bfOffBits, sizeof(File.bfOffBits), 1, f);
-    // printf("\n Pozycja danych obrazkowych: %d", File.bfOffBits);
-    printf("\n Pozycja danych obrazkowych: %d", fileHeader.bfOffBits);
-
-    printf("\n");
-
-    // fseek(f, 14, SEEK_SET);
-    // fread(&Picture.biSize, sizeof(Picture.biSize), 1, f);
-    // printf("\n Wielkosc naglowka informacyjnego: %d", Picture.biSize);
-
-    // fread(&Picture.biWidth, sizeof(Picture.biWidth), 1, f);
-    // printf("\n Szerokosc: %d pikseli", Picture.biWidth);
-
-    // fread(&Picture.biHeight, sizeof(Picture.biHeight), 1, f);
-    // printf("\n Wysokosc: %d pikseli", Picture.biHeight);
-
-    // fread(&Picture.biPlanes, sizeof(Picture.biPlanes), 1, f);
-    // printf("\n Liczba platow: %d", Picture.biPlanes);
-
-    // fread(&Picture.biBitCount, sizeof(Picture.biBitCount), 1, f);
-    // printf("\n Liczba bitow na piksel: %d (1, 4, 8, or 24)", Picture.biBitCount);
-
-    // fread(&Picture.biCompression, sizeof(Picture.biCompression), 1, f);
-    // printf("\n Kompresja: %d (0=none, 1=RLE-8, 2=RLE-4)", Picture.biCompression);
-
-    // fread(&Picture.biSizeImage, sizeof(Picture.biSizeImage), 1, f);
-    // printf("\n Rozmiar samego rysunku: %d", Picture.biSizeImage);
-
-    // fread(&Picture.biXPelsPerMeter, sizeof(Picture.biXPelsPerMeter), 1, f);
-    // printf("\n Rozdzielczosc pozioma: %d", Picture.biXPelsPerMeter);
-
-    // fread(&Picture.biYPelsPerMeter, sizeof(Picture.biYPelsPerMeter), 1, f);
-    // printf("\n Rozdzielczosc pionowa: %d", Picture.biYPelsPerMeter);
-
-    // fread(&Picture.biClrUsed, sizeof(Picture.biClrUsed), 1, f);
-    // printf("\n Liczba kolorow w palecie: %d", Picture.biClrUsed);
-
-    // fread(&Picture.biClrImportant, sizeof(Picture.biClrImportant), 1, f);
-    // printf("\n Wazne kolory w palecie: %d", Picture.biClrImportant);
-
-    // /*************************/
+    std::cout << std::endl << std::string(25, '*') << std::endl;
 
     // FILE* w = fopen("negative.bmp", "wb");
     // if (w == nullptr)
@@ -122,7 +82,7 @@ int main(int arc, char* argv[]) {
     // }
 
     printf("\n");
-    fclose(f);
+    bmpFile.close();
     //fclose(w);
 
     return 0;

@@ -14,3 +14,4 @@ Jako rozwiązanie należy wstawić link do własnego repozytorium.
 https://pl.wikipedia.org/wiki/Windows_Bitmap  
 https://solarianprogrammer.com/2018/11/19/cpp-reading-writing-bmp-images/  
 https://github.com/sol-prog/cpp-bmp-images  
+https://stackoverflow.com/questions/9296059/read-pixel-value-in-bmp-file  

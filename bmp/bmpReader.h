@@ -3,23 +3,23 @@
 #include "pch.h"
 #include <fstream>
 
-struct ColorsRGB {
-    char R, G, B;
+//#pragma pack(push, 1)
+struct ColorsHeader {
+    char r, g, b;
 } __attribute__((__packed__));
 
 struct PictureHeader {
-    unsigned int biSize;
-    int biWidth;
-    int biHeight;
-    unsigned short biPlanes;
-    unsigned short biBitCount;
-    unsigned int biCompression;
-    unsigned int biSizeImage;
-    int biXPelsPerMeter;
-    int biYPelsPerMeter;
-    unsigned int biClrUsed;
-    unsigned int biClrImportant;
-    ColorsRGB rgb;
+    unsigned int size;
+    int width;
+    int height;
+    unsigned short planes;
+    unsigned short bitCount;
+    unsigned int compression;
+    unsigned int sizeImage;
+    int xPixelsPerMeter;
+    int yPixelsPerMeter;
+    unsigned int colorsUsed;
+    unsigned int colorsImportant;
 } __attribute__((__packed__));
 
 struct FileHeader {
@@ -28,8 +28,11 @@ struct FileHeader {
     unsigned short reserved1;
     unsigned short reserved2;
     unsigned int offset;
-    PictureHeader Picture;
 } __attribute__((__packed__));
 
+//#pragma pack(pop)
 
-FileHeader readBmpFile(std::ifstream &bmpFile);
+
+FileHeader readFileHeader(std::ifstream &bmpFile);
+PictureHeader readPictureHeader(std::ifstream &bmpFile);
+ColorsHeader readColorsHeader(std::ifstream &bmpFile);

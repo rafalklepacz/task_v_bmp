@@ -3,8 +3,17 @@
 
 #include <iostream>
 
+void printSeparator()
+{
+    std::cout << std::string(40, '=') << std::endl;
+}
+
 int main(int arc, char* argv[])
 {
+    std::cout << "sizeof(FileHeader)=" << sizeof(FileHeader) << std::endl;
+    std::cout << "sizeof(PictureHeader)=" << sizeof(PictureHeader) << std::endl;
+    std::cout << "sizeof(ColorsRGB)=" << sizeof(ColorsHeader) << std::endl;
+
     std::string filePath(argv[1]);
     std::ifstream bmpFile(filePath, std::ios::binary);
 
@@ -16,27 +25,30 @@ int main(int arc, char* argv[])
 
     std::cout << "File '" << filePath << "' opened!" << std::string(2, '\n');
 
-    FileHeader bmpFileInfo = readBmpFile(bmpFile);
-
+    FileHeader fileHeader = readFileHeader(bmpFile);
     std::cout << "INFORMACJE O BITMAPIE!" << std::endl;
-    std::cout << "Typ: " << std::hex << bmpFileInfo.type << std::endl;
-    std::cout << "Rozmiar pliku: " << std::dec << bmpFileInfo.size << " bajtow" << std::endl;
-    std::cout << "Zarezerwowane1: " << std::dec << bmpFileInfo.reserved1 << std::endl;
-    std::cout << "Zarezerwowane2: " << std::dec << bmpFileInfo.reserved2 << std::endl;
-    std::cout << "Pozycja danych obrazkowych: " << std::dec << bmpFileInfo.offset << std::endl << std::endl;
-    std::cout << "Wielkosc naglowka informacyjnego: " << std::dec << bmpFileInfo.Picture.biSize << std::endl;
-    std::cout << "Szerokosc: " << std::dec << bmpFileInfo.Picture.biWidth << " pikseli" << std::endl;
-    std::cout << "Wysokosc: " << std::dec << bmpFileInfo.Picture.biHeight << " pikseli" << std::endl;
-    std::cout << "Liczba platow: " << std::dec << bmpFileInfo.Picture.biPlanes << std::endl;
-    std::cout << "Liczba bitow na piksel: " << std::dec << bmpFileInfo.Picture.biBitCount << " (1, 4, 8, or 24)" << std::endl;
-    std::cout << "Kompresja: " << std::dec << bmpFileInfo.Picture.biCompression << " (0=none, 1=RLE-8, 2=RLE-4)" << std::endl;
-    std::cout << "Rozmiar samego rysunku: " << std::dec << bmpFileInfo.Picture.biSizeImage << std::endl;
-    std::cout << "Rozdzielczosc pozioma: " << std::dec << bmpFileInfo.Picture.biXPelsPerMeter << std::endl;
-    std::cout << "Rozdzielczosc pionowa: " << std::dec << bmpFileInfo.Picture.biYPelsPerMeter << std::endl;
-    std::cout << "Liczba kolorow w palecie: " << std::dec << bmpFileInfo.Picture.biClrUsed << std::endl;
-    std::cout << "Wazne kolory w palecie: " << std::dec << bmpFileInfo.Picture.biClrImportant << std::endl;
+    std::cout << "Typ: " << std::hex << fileHeader.type << std::endl;
+    std::cout << "Rozmiar pliku: " << std::dec << fileHeader.size << " bajtow" << std::endl;
+    std::cout << "Zarezerwowane1: " << std::dec << fileHeader.reserved1 << std::endl;
+    std::cout << "Zarezerwowane2: " << std::dec << fileHeader.reserved2 << std::endl;
+    std::cout << "Pozycja danych obrazkowych: " << std::dec << fileHeader.offset << std::endl << std::endl;
 
-    std::cout << std::endl << std::string(25, '*') << std::endl;
+    printSeparator();
+
+    PictureHeader pictureHeader = readPictureHeader(bmpFile);
+    std::cout << "Wielkosc naglowka informacyjnego: " << std::dec << pictureHeader.size << std::endl;
+    std::cout << "Szerokosc: " << std::dec << pictureHeader.width << " pikseli" << std::endl;
+    std::cout << "Wysokosc: " << std::dec << pictureHeader.height << " pikseli" << std::endl;
+    std::cout << "Liczba platow: " << std::dec << pictureHeader.planes << std::endl;
+    std::cout << "Liczba bitow na piksel: " << std::dec << pictureHeader.bitCount << " (1, 4, 8, or 24)" << std::endl;
+    std::cout << "Kompresja: " << std::dec << pictureHeader.compression << " (0=none, 1=RLE-8, 2=RLE-4)" << std::endl;
+    std::cout << "Rozmiar samego rysunku: " << std::dec << pictureHeader.sizeImage << std::endl;
+    std::cout << "Rozdzielczosc pozioma: " << std::dec << pictureHeader.xPixelsPerMeter << std::endl;
+    std::cout << "Rozdzielczosc pionowa: " << std::dec << pictureHeader.yPixelsPerMeter << std::endl;
+    std::cout << "Liczba kolorow w palecie: " << std::dec << pictureHeader.colorsUsed << std::endl;
+    std::cout << "Wazne kolory w palecie: " << std::dec << pictureHeader.colorsImportant << std::endl;
+
+    printSeparator();
 
     // FILE* w = fopen("negative.bmp", "wb");
     // if (w == nullptr)
